@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeatherPro | Tomorrow.io</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <div class="logo">
+        <i class="fas fa-cloud-sun"></i>
+        <span>WeatherPro</span>
+      </div>
+      <div class="header-controls">
+        <div class="real-time" id="real-time">--:--:--</div>
+        <label class="theme-switch">
+          <input type="checkbox" id="theme-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <div class="search-container">
+      <div class="search-wrapper">
+        <input type="text" class="search-input" id="search-input" placeholder="Cerca una città..." autocomplete="off">
+        <div class="autocomplete-results" id="autocomplete-results"></div>
+      </div>
+      <button class="search-btn" id="search-btn">
+        <i class="fas fa-search"></i> Cerca
+      </button>
+      <button class="gps-btn" id="gps-btn">
+        <i class="fas fa-location-crosshairs"></i>
+      </button>
+    </div>
+
+    <section class="current-weather" id="current-weather">
+      <div class="loading">Caricamento dati meteo...</div>
+    </section>
+
+    <section class="hourly-forecast">
+      <h2 class="section-title">
+        <i class="fas fa-clock"></i>
+        Previsioni orarie
+      </h2>
+      <div class="hourly-container" id="hourly-forecast"></div>
+    </section>
+
+    <section class="daily-forecast">
+      <h2 class="section-title">
+        <i class="fas fa-calendar-week"></i>
+        Previsioni 7 giorni
+      </h2>
+      <div class="daily-container" id="daily-forecast"></div>
+      <div class="chart-container">
+        <canvas id="weather-chart"></canvas>
+      </div>
+    </section>
+
+    <section class="air-quality">
+      <h2 class="section-title">
+        <i class="fas fa-wind"></i>
+        Qualità dell'aria
+      </h2>
+      <div class="air-quality-card" id="air-quality">
+        <div class="loading">Caricamento...</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
