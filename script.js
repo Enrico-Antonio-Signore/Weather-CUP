@@ -116,14 +116,21 @@ async function fetchWeather(lat, lon) {
     const url = new URL("https://api.tomorrow.io/v4/timelines");
     const params = {
       location: `${lat},${lon}`,
-      fields: "temperature,feelsLike,humidity,windSpeed,weatherCode,precipitationProbability,pressureSurfaceLevel,uvIndex,airQuality",
-      timesteps: "current,1h,1d",
+      fields: ["temperature", "temperatureApparent", "humidity", "windSpeed", "weatherCode", "precipitationProbability", "pressureSurfaceLevel", "uvIndex", "particulateMatter25", "particulateMatter10"],
+      timesteps: ["current", "1h", "1d"],
       units: "metric",
       apikey: TOMORROW_API_KEY
     };
 
-    Object.entries(params).forEach(([key, value]) => 
-      url.searchParams.append(key, value));
+    // Convert params to query string manually
+    const queryParams = new URLSearchParams();
+    queryParams.append("location", params.location);
+    params.fields.forEach(field => queryParams.append("fields", field));
+    params.timesteps.forEach(step => queryParams.append("timesteps", step));
+    queryParams.append("units", params.units);
+    queryParams.append("apikey", params.apikey);
+
+    url.search = queryParams.toString();
 
     OPENTOMORROW_DEBUG && console.log("API Request:", url.toString());
 
@@ -188,7 +195,7 @@ function updateCurrentWeather(data, lat, lon) {
         ${createDetailCard("fa-wind", "Vento", `${data.windSpeed} km/h`)}
         ${createDetailCard("fa-tint", "Umidità", `${data.humidity}%`)}
         ${createDetailCard("fa-umbrella", "Pioggia", `${data.precipitationProbability}%`)}
-        ${createDetailCard("fa-thermometer-half", "Percepiti", `${Math.round(data.feelsLike)}°C`)}
+        ${createDetailCard("fa-thermometer-half", "Percepiti", `${Math.round(data.temperatureApparent)}°C`)}
       </div>
     </div>
   `;
@@ -239,7 +246,62 @@ function fallbackToDefaultLocation() {
   domElements.searchInput.value = "Roma, Italia";
 }
 
-// (Aggiungi qui le altre funzioni per hourly forecast, air quality, ecc.)
+// Alcune funzioni come extractCurrentData, extractHourlyData, ecc. 
+// sembrano mancanti. Dovrai implementarle.
+function extractCurrentData(timelines) {
+  const currentTimeline = timelines.find(timeline => timeline.timestep === "current");
+  if (!currentTimeline) throw new Error("No current timeline data");
+  
+  return {
+    temperature: currentTimeline.intervals[0].values.temperature,
+    temperatureApparent: currentTimeline.intervals[0].values.temperatureApparent,
+    humidity: currentTimeline.intervals[0].values.humidity,
+    windSpeed: currentTimeline.intervals[0].values.windSpeed,
+    weatherCode: currentTimeline.intervals[0].values.weatherCode,
+    precipitationProbability: currentTimeline.intervals[0].values.precipitationProbability,
+  };
+}
+
+function extractHourlyData(timelines) {
+  // Implementa la logica per estrarre i dati orari
+  return [];
+}
+
+function extractDailyData(timelines) {
+  // Implementa la logica per estrarre i dati giornalieri
+  return [];
+}
+
+function updateHourlyForecast(hourlyData) {
+  // Implementa l'aggiornamento delle previsioni orarie
+}
+
+function updateDailyForecast(dailyData) {
+  // Implementa l'aggiornamento delle previsioni giornaliere
+}
+
+function updateAirQuality(airQualityData) {
+  // Implementa l'aggiornamento della qualità dell'aria
+}
+
+// Funzioni mancanti
+function getGeolocation() {
+  return new Promise((resolve, reject) => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    } else {
+      reject(new Error("Geolocation non supportata"));
+    }
+  });
+}
+
+function handleSearch() {
+  // TODO: Implementa la ricerca per nome città
+}
+
+function handleInput() {
+  // TODO: Implementa l'autocompletamento
+}
 
 // Inizializza il tema
 function loadThemePreference() {
